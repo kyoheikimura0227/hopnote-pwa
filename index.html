@@ -25,10 +25,14 @@
   <div id="splash" class="splash-screen">
     <div class="text-center space-y-4 animate-pulse-slow">
       <div class="inline-flex items-center justify-center w-20 h-20 bg-amber-500 rounded-2xl text-stone-950 shadow-lg shadow-amber-500/20">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M17 10a4 4 0 01-4 4H7a4 4 0 01-4-4V5a2 2 0 012-2h8a2 2 0 012 2v5z" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M17 14h1a2 2 0 012 2v2a2 2 0 01-2 2h-1" />
+        <!-- 修正済みの美しいビールアイコンSVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 11h1a3 3 0 0 1 0 6h-1" />
+          <path d="M9 12v6" />
+          <path d="M13 12v6" />
+          <path d="M14 7.5c-1 .2-1.4.8-2 1.4c-.6-.6-1-.2-2-.2c-1 0-1 .5-2 1c-.8.4-1 .8-1 1.3c0 .5.2.8.5 1.0c0.5 0.5 1 0.5 1.5 0.5h8c1.5 0 2-1 2-2.5c0-1.5-.5-2-2-2.5c-.8-.2-1-.3-2-.3Z" />
+          <path d="M5 21h12" />
+          <path d="M5 11v10h12V11" />
         </svg>
       </div>
       <h1 class="text-3xl font-extrabold tracking-wider text-amber-100">HopNote</h1>
@@ -43,8 +47,14 @@
     <div id="view-auth" class="flex-1 flex flex-col justify-between text-center max-w-sm mx-auto w-full">
       <div class="mt-12 space-y-3">
         <div class="inline-flex items-center justify-center w-16 h-16 bg-amber-500/10 rounded-2xl border border-amber-500/30 text-amber-400">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <!-- 修正済みの美しいビールアイコンSVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 11h1a3 3 0 0 1 0 6h-1" />
+            <path d="M9 12v6" />
+            <path d="M13 12v6" />
+            <path d="M14 7.5c-1 .2-1.4.8-2 1.4c-.6-.6-1-.2-2-.2c-1 0-1 .5-2 1c-.8.4-1 .8-1 1.3c0 .5.2.8.5 1.0c0.5 0.5 1 0.5 1.5 0.5h8c1.5 0 2-1 2-2.5c0-1.5-.5-2-2-2.5c-.8-.2-1-.3-2-.3Z" />
+            <path d="M5 21h12" />
+            <path d="M5 11v10h12V11" />
           </svg>
         </div>
         <h2 class="text-2xl font-bold tracking-tight text-stone-100">HopNote を始める</h2>
@@ -106,7 +116,7 @@
               <label class="text-xs font-bold text-stone-300">ニックネーム</label>
               <span class="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.2 rounded font-bold border border-amber-500/20">必須</span>
             </div>
-            <!-- iOS自動ズームを防ぐため input 要素は font-size: 16px を style.css で強制 -->
+            <!-- iOS自動フォーカスズームを防ぐため font-size: 16px 以上が適用されます -->
             <input id="reg-nickname" type="text" required placeholder="例: ホップくん" class="w-full bg-stone-900 border border-stone-800 rounded-xl p-3.5 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-500 transition-colors">
           </div>
 
