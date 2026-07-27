@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <!-- iPhoneノッチ・ホームバーに被らないよう viewport-fit=cover、さらに自動ズーム防止用の maximum-scale=1.0 と user-scalable=no -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>HopNote PWA</title>
+  
+  <!-- iOS PWA 用メタタグ設定 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HopNote">
+  <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1567696911980-2eed69a46042?auto=format&fit=crop&w=192&q=80">
+  
+  <!-- PWA マニフェスト -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- スタイリング (Tailwind CSS JIT) & PWA専用スタイル -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-stone-950 text-stone-100 font-sans select-none antialiased">
+
+  <!-- 1. PWA スプラッシュ画面 (初回起動時にふわっと現れて消える演出) -->
+  <div id="splash" class="splash-screen">
+    <div class="text-center space-y-4 animate-pulse-slow">
+      <div class="inline-flex items-center justify-center w-20 h-20 bg-amber-500 rounded-2xl text-stone-950 shadow-lg shadow-amber-500/20">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 10a4 4 0 01-4 4H7a4 4 0 01-4-4V5a2 2 0 012-2h8a2 2 0 012 2v5z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 14h1a2 2 0 012 2v2a2 2 0 01-2 2h-1" />
+        </svg>
+      </div>
+      <h1 class="text-3xl font-extrabold tracking-wider text-amber-100">HopNote</h1>
+      <p class="text-xs text-stone-400 font-mono">PWA Splash Loading...</p>
+    </div>
+  </div>
+
+  <!-- Main App Root Container (Safe Areaを考慮したPWAラッパー) -->
+  <div class="h-full w-full flex flex-col justify-between pwa-safe-area">
+    
+    <!-- 2. サインイン / メイン認証画面 -->
+    <div id="view-auth" class="flex-1 flex flex-col justify-between text-center max-w-sm mx-auto w-full">
+      <div class="mt-12 space-y-3">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-amber-500/10 rounded-2xl border border-amber-500/30 text-amber-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold tracking-tight text-stone-100">HopNote を始める</h2>
+        <p class="text-xs text-stone-400 max-w-xs mx-auto">
+          クラフトビールをスマートに記録・お気に入り管理する、あなただけの大人なビール日記です。
+        </p>
+      </div>
+
+      <div class="space-y-3 px-4">
+        <!-- Googleでサインイン -->
+        <button onclick="demoLogin('google')" class="w-full bg-white hover:bg-stone-100 text-stone-900 text-sm font-bold py-3.5 px-4 rounded-xl shadow transition-all flex items-center justify-center gap-3 active:scale-[0.98]">
+          <svg class="h-4 w-4" viewBox="0 0 24 24">
+            <path fill="#EA4335" d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.54 14.98 1 12 1 7.35 1 3.37 3.67 1.39 7.56l3.85 2.99c.96-2.87 3.66-4.51 6.76-4.51z"/>
+            <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.51h6.46c-.29 1.48-1.14 2.73-2.42 3.57l3.77 2.92c2.2-2.03 3.68-5.02 3.68-8.64z"/>
+            <path fill="#FBBC05" d="M5.24 14.75a7.12 7.12 0 0 1 0-4.51L1.39 7.25C.5 9.07 0 11.08 0 13.18s.5 4.11 1.39 5.93l3.85-2.99c-.96-1.56-.96-3.8-.002-5.37z"/>
+            <path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.77-2.92c-1.11.75-2.53 1.19-4.19 1.19-3.1 0-5.8-1.64-6.76-4.51l-3.85 2.99C3.37 20.33 7.35 23 12 23z"/>
+          </svg>
+          Googleでサインイン
+        </button>
+
+        <!-- 既存ログイン -->
+        <button onclick="demoLogin('email')" class="w-full bg-stone-900 hover:bg-stone-850 text-stone-200 text-sm font-bold py-3.5 px-4 rounded-xl border border-stone-800 transition-all active:scale-[0.98]">
+          登録済みアカウントでログイン
+        </button>
+
+        <div class="flex items-center justify-center my-3">
+          <div class="border-t border-stone-800 flex-grow"></div>
+          <span class="px-3 text-[10px] text-stone-600 font-bold font-mono">または</span>
+          <div class="border-t border-stone-800 flex-grow"></div>
+        </div>
+
+        <!-- 新規アカウント登録 -->
+        <button onclick="switchView('view-register')" class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 text-sm font-extrabold py-3.5 px-4 rounded-xl shadow-lg shadow-amber-500/10 transition-all active:scale-[0.98]">
+          新規アカウントを作成
+        </button>
+      </div>
+
+      <div class="px-6 py-4">
+        <p class="text-[10px] text-stone-500 leading-relaxed">
+          ログイン・新規登録を行うことで、当アプリの<br>
+          <a href="#" class="underline text-amber-500/80">利用規約</a> および <a href="#" class="underline text-amber-500/80">プライバシーポリシー</a> に同意したものとみなされます。
+        </p>
+      </div>
+    </div>
+
+    <!-- 3. 新規登録フォーム画面 -->
+    <div id="view-register" class="hidden flex-1 flex-col justify-between max-w-sm mx-auto w-full">
+      <div class="px-4 py-6 space-y-6">
+        <div class="flex items-center justify-between border-b border-stone-800 pb-3">
+          <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
+            <span>新規アカウント作成</span>
+          </div>
+          <button onclick="switchView('view-auth')" class="text-xs text-stone-400 hover:text-white transition-colors">戻る</button>
+        </div>
+
+        <form onsubmit="handleRegister(event)" class="space-y-4">
+          <div class="space-y-1.5">
+            <div class="flex justify-between items-center">
+              <label class="text-xs font-bold text-stone-300">ニックネーム</label>
+              <span class="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.2 rounded font-bold border border-amber-500/20">必須</span>
+            </div>
+            <!-- iOS自動ズームを防ぐため input 要素は font-size: 16px を style.css で強制 -->
+            <input id="reg-nickname" type="text" required placeholder="例: ホップくん" class="w-full bg-stone-900 border border-stone-800 rounded-xl p-3.5 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-500 transition-colors">
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-stone-300">メールアドレス</label>
+            <input type="email" required placeholder="example@hopnote.jp" class="w-full bg-stone-900 border border-stone-800 rounded-xl p-3.5 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-500 transition-colors">
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-stone-300">パスワード (8文字以上)</label>
+            <input type="password" required minlength="8" placeholder="••••••••" class="w-full bg-stone-900 border border-stone-800 rounded-xl p-3.5 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-500 transition-colors">
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3.5 px-4 rounded-xl shadow-lg transition-all active:scale-[0.98]">
+              同意してアカウントを作成
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="px-6 py-4 text-center">
+        <p class="text-[10px] text-stone-600 leading-relaxed">
+          ※日本国内の法律に基づき、20歳未満の飲酒は禁止されています。アカウント登録は20歳以上の方に限ります。
+        </p>
+      </div>
+    </div>
+
+    <!-- 4. 登録後のデモホーム画面 (PWA成功シミュレータ) -->
+    <div id="view-home" class="hidden flex-1 flex-col justify-between max-w-sm mx-auto w-full text-center">
+      <div class="my-auto space-y-6 px-4">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-full animate-bounce">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        
+        <div class="space-y-2">
+          <h3 class="text-xl font-bold text-emerald-400">ログイン成功！</h3>
+          <p class="text-sm text-stone-200">
+            ようこそ、<span id="user-name" class="font-bold text-amber-400"></span> さん！
+          </p>
+          <p class="text-xs text-stone-400 leading-relaxed px-4">
+            これでiPhoneのPWAとしてホーム画面アプリ化、およびスプラッシュ＆認証画面の基本検証が完了しました。
+          </p>
+        </div>
+
+        <div class="pt-4">
+          <button onclick="switchView('view-auth')" class="bg-stone-900 hover:bg-stone-850 text-stone-400 hover:text-white px-4 py-2 rounded-lg text-xs font-semibold border border-stone-800 transition-colors">
+            ログアウトして戻る
+          </button>
+        </div>
+      </div>
+
+      <div class="py-4 text-center">
+        <p class="text-[10px] text-stone-600 font-mono">HopNote PWA Demo v1.0.0</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PWA Interaction Script -->
+  <script src="app.js"></script>
+</body>
+</html>
